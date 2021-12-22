@@ -1,6 +1,5 @@
 package com.mycompany.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.Document;
@@ -10,6 +9,8 @@ import com.mongodb.MongoClientOptions;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mycompany.exception.MongoException;
+import com.mycompany.utils.MongoUtils;
 
 public class MongoDAO {
 
@@ -38,20 +39,13 @@ public class MongoDAO {
 	
 	public MongoDAO(List<String> urls, List<Integer> ports, String database) {
 		// urls, ports 사이즈 확인
-		chkSizeException(urls, ports);
+		MongoException.chkSizeException(urls, ports);
 		
 		URL_LIST = urls;
 		PORT_LIST = ports;
 		DB = database;
 		
 		REPL_SET = true;
-	}
-	
-	// urls, ports 사이즈 일치하지 않을 시 IllegalArgumentException 발생
-	private void chkSizeException(List<String> urls, List<Integer> ports) {
-		if(urls.size() != ports.size()) {
-			throw new IllegalArgumentException("List size exception.  urlSize: " + urls.size() + " portsSize: " + ports.size());
-		}
 	}
 	
 	// MongoClient 연결
@@ -62,22 +56,12 @@ public class MongoDAO {
 				.maxConnectionLifeTime(TIMEOUT).maxConnectionIdleTime(TIMEOUT * 20).build();
 		
 		if(REPL_SET) {
-			client = new MongoClient(makeServerAddressList(URL_LIST, PORT_LIST), options);
+			client = new MongoClient(MongoUtils.makeServerAddressList(URL_LIST, PORT_LIST), options);
 		}
 		else {
 			client = new MongoClient(new ServerAddress(URL, PORT), options);
 		}
 		
 		return client;
-	}
-	
-	private List<ServerAddress> makeServerAddressList(List<String> urls, List<Integer> ports){
-		List<ServerAddress> result = new ArrayList<ServerAddress>();
-		
-		for(int i=0; i<urls.size(); i++) {
-			result.add(new ServerAddress(urls.get(i), ports.get(i)));
-		}
-		
-		return result;
 	}
 }
