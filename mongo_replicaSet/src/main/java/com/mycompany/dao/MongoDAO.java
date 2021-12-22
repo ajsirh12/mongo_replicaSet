@@ -49,7 +49,7 @@ public class MongoDAO {
 	}
 	
 	// MongoClient 연결
-	private MongoClient connetClient() {
+	private MongoClient connectClient() {
 		MongoClient client = null;
 		
 		MongoClientOptions options = MongoUtils.setMongoOptions(TIMEOUT);
@@ -64,7 +64,19 @@ public class MongoDAO {
 		return client;
 	}
 	
+	// MongoDatabase 연결
 	private MongoDatabase connectDB(MongoClient client) {
 		return client.getDatabase(DB);
 	}
+	
+	// mongoDB 연결
+	public void connectMongoDB() {
+		MONGO_CLIENT = connectClient();
+		MONGO_DATABASE = connectDB(MONGO_CLIENT);
+	}
+	
+	// mongoDB 연결 해제
+	public void disconnectMongoDB() {
+		MONGO_CLIENT.close();
+	}	
 }
