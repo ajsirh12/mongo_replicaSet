@@ -1,6 +1,7 @@
 package com.mycompany.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.bson.Document;
 
@@ -16,7 +17,6 @@ public class MongoDAO {
 
 	private MongoClient MONGO_CLIENT;
 	private MongoDatabase MONGO_DATABASE;
-	private MongoCollection<Document> MONGO_COLLECTION;
 	
 	private boolean REPL_SET = false;
 	
@@ -78,5 +78,16 @@ public class MongoDAO {
 	// mongoDB 연결 해제
 	public void disconnectMongoDB() {
 		MONGO_CLIENT.close();
-	}	
+	}
+	
+	/***
+	 * insertOne <br>
+	 * @param collectionName
+	 * @param param
+	 */
+	public void insertOne(String collectionName, Map<String, Object> param) {
+		
+		MongoCollection<Document> collection = MONGO_DATABASE.getCollection(collectionName);
+		collection.insertOne(new Document(param));
+	}
 }
