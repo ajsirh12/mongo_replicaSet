@@ -2,14 +2,26 @@ package com.mycompany.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import org.bson.Document;
 
 import com.mongodb.MongoClientOptions;
 import com.mongodb.ServerAddress;
 
 public class MongoUtils {
+	
+	private static MongoUtils mongoUtils = null;
 
 	private MongoUtils() {
 		
+	}
+	
+	public static MongoUtils getInstance() {
+		if(mongoUtils == null) {
+			mongoUtils = new MongoUtils();
+		}		
+		return mongoUtils;
 	}
 	
 	/***
@@ -22,7 +34,7 @@ public class MongoUtils {
 	 * @param timeout
 	 * @return
 	 */
-	public static MongoClientOptions setMongoOptions(int timeout) {
+	public MongoClientOptions setMongoOptions(int timeout) {
 		return MongoClientOptions.builder().connectTimeout(timeout).socketTimeout(timeout)
 				.maxConnectionLifeTime(timeout).maxConnectionIdleTime(timeout * 20).build();
 	}
@@ -33,7 +45,7 @@ public class MongoUtils {
 	 * @param ports
 	 * @return
 	 */
-	public static List<ServerAddress> makeServerAddressList(List<String> urls, List<Integer> ports){
+	public List<ServerAddress> makeServerAddressList(List<String> urls, List<Integer> ports){
 		List<ServerAddress> result = new ArrayList<ServerAddress>();
 		
 		for(int i=0; i<urls.size(); i++) {
@@ -41,5 +53,20 @@ public class MongoUtils {
 		}
 		
 		return result;
+	}
+	
+	/***
+	 * List<Map<String, Object>> ==> List<Document>
+	 * @param paramList
+	 * @return
+	 */
+	public List<Document> makeDocList(List<Map<String, Object>> paramList){
+		List<Document> docList = new ArrayList<Document>();
+		
+		for(Map<String, Object> map : paramList) {
+			docList.add(new Document(map));
+		}
+		
+		return docList;
 	}
 }
