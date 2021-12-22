@@ -26,6 +26,7 @@ public class MongoUtils {
 	
 	/***
 	 * mongo options 설정 <br><br>
+	 * 단위 ms <br><br>
 	 * connectTimeout(timeout) <br>
 	 * socketTimeout(timeout) <br>
 	 * maxConnectionLifeTime(timeout) <br>
