@@ -32,6 +32,12 @@ public class MongoDAO {
 	
 	private static final int TIMEOUT = 3000;
 	
+	/***
+	 * ReplicaSet 구성 X
+	 * @param url
+	 * @param port
+	 * @param database
+	 */
 	public MongoDAO(String url, int port, String database) {
 		URL = url;
 		PORT = port;
@@ -40,6 +46,12 @@ public class MongoDAO {
 		REPL_SET = false;
 	}
 	
+	/***
+	 * ReplicaSet 구성 O
+	 * @param urls
+	 * @param ports
+	 * @param database
+	 */
 	public MongoDAO(List<String> urls, List<Integer> ports, String database) {
 		// urls, ports 사이즈 확인
 		MongoException.chkSizeException(urls, ports);
