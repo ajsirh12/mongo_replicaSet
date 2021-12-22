@@ -52,8 +52,7 @@ public class MongoDAO {
 	private MongoClient connetClient() {
 		MongoClient client = null;
 		
-		MongoClientOptions options = MongoClientOptions.builder().connectTimeout(TIMEOUT).socketTimeout(TIMEOUT)
-				.maxConnectionLifeTime(TIMEOUT).maxConnectionIdleTime(TIMEOUT * 20).build();
+		MongoClientOptions options = MongoUtils.setMongoOptions(TIMEOUT);
 		
 		if(REPL_SET) {
 			client = new MongoClient(MongoUtils.makeServerAddressList(URL_LIST, PORT_LIST), options);
@@ -63,5 +62,9 @@ public class MongoDAO {
 		}
 		
 		return client;
+	}
+	
+	private MongoDatabase connectDB(MongoClient client) {
+		return client.getDatabase(DB);
 	}
 }
