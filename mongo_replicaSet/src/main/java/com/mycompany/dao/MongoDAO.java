@@ -1,5 +1,6 @@
 package com.mycompany.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +16,8 @@ import com.mycompany.utils.MongoUtils;
 
 public class MongoDAO {
 
+	private static final MongoUtils mongoUtils = MongoUtils.getInstance();
+	
 	private MongoClient MONGO_CLIENT;
 	private MongoDatabase MONGO_DATABASE;
 	
@@ -52,10 +55,10 @@ public class MongoDAO {
 	private MongoClient connectClient() {
 		MongoClient client = null;
 		
-		MongoClientOptions options = MongoUtils.setMongoOptions(TIMEOUT);
+		MongoClientOptions options = mongoUtils.setMongoOptions(TIMEOUT);
 		
 		if(REPL_SET) {
-			client = new MongoClient(MongoUtils.makeServerAddressList(URL_LIST, PORT_LIST), options);
+			client = new MongoClient(mongoUtils.makeServerAddressList(URL_LIST, PORT_LIST), options);
 		}
 		else {
 			client = new MongoClient(new ServerAddress(URL, PORT), options);
@@ -86,8 +89,19 @@ public class MongoDAO {
 	 * @param param
 	 */
 	public void insertOne(String collectionName, Map<String, Object> param) {
-		
 		MongoCollection<Document> collection = MONGO_DATABASE.getCollection(collectionName);
 		collection.insertOne(new Document(param));
+	}
+	
+	/***
+	 * insertMany <br>
+	 * @param collectionName
+	 * @param param
+	 */
+	public void insertMany(String collectionName, List<Map<String, Object>> param) {
+		MongoCollection<Document> collection = MONGO_DATABASE.getCollection(collectionName);
+		
+		List<Document> docList = mongoUtils.makeDocList(param);
+		collection.insertMany(docList);
 	}
 }
