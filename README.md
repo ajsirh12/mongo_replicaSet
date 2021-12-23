@@ -85,3 +85,63 @@ replication:
 - replication:
   - replSetName: replTest
     - DB에서 Replica Set을 구성할 이름 설정
+
+
+## 2. mongoDB 
+### mongoDB 실행
+```
+mongod --port <port 번호> --config <mongod.conf 경로>
+```
+mongod.conf에서 설정한 port와 mongod.conf 경로 입력
+### mongoDB 접속
+#### 로컬 접속
+```
+mongo --port <port 번호>
+```
+mongod.conf에서 설정한 port 입력
+#### ip주소 접속
+```
+mongo <ipaddress:port>
+```
+접속할 ip주소와 port 입력
+
+## 3. replicaSet 구성
+### replicaSet 설정
+```
+rs.conf = {
+  _id: <replSetName>,
+  members:[
+    {_id:0, host:<ipaddress:port>, priority:2},
+    {_id:1, host:<ipaddress:port>, priority:1},
+    {_id:2, host:<ipaddress:port>, priority:1},
+  ]
+}
+```
+- mongod.conf에서 설정한 replSetName 입력
+- 연결할 mongoDB 주소, 포트번호 입력
+- priority:2 => PRIMARY 서버
+  - 해당 서버가 활성화시 자동으로 PRIMARY 복구
+- priority:1 => SECOND 
+  - PRIMARY 서버 비활성화시 투표를 통해 PRIMARY서버 역할
+- priority:0 => 아비터 설정
+
+### replicaSet 실행
+```
+rs.initiate(rsconf)
+```
+한 번만 실행해야 함
+
+### replicaSet 서버 추가
+```
+rs.add(<ipaddress:port>)
+```
+
+### replicaSet 아비터 추가
+```
+rs.addArb(<ipaddress:port>)
+```
+
+### replicaSet 서버 삭제
+```
+rs.remove(<ipaddress:port>)
+```
