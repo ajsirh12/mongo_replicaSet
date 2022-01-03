@@ -69,7 +69,6 @@ replication:
 ```
 - systemLog:
   - path: /var/log/mongodb/mongod.log
-    - 로그 저장 장소로 사용할 위치에 미리 디렉토리 생성 (여기서는 기본값 사용)
 
 - storage:
   - dbPath: /var/lib/mongo
